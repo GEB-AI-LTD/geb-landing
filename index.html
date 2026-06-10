@@ -332,20 +332,21 @@
     var L = p.getTotalLength();
     p.style.strokeDasharray = L; p.style.strokeDashoffset = L;
   });
-  var intro = gsap.timeline({defaults:{ease:'power2.out'}});
+  var intro = gsap.timeline({defaults:{ease:'power2.out'},
+    onComplete: function(){
+      gsap.to('.hero-center', {yPercent:-18, opacity:0.0, ease:'none',
+        scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}});
+      gsap.to('.d1 svg', {yPercent:24, ease:'none', scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}});
+      gsap.to('.d2 svg', {yPercent:14, ease:'none', scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}});
+      gsap.to('.sun', {yPercent:60, ease:'none', scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}});
+      ScrollTrigger.refresh();
+    }});
   intro.from('.sun', {opacity:0, scale:0.6, transformOrigin:'center', duration:2.2, ease:'power1.out'}, 0)
-    .from('.d1 svg, .d2 svg, .d3 svg', {yPercent:100, duration:1.6, stagger:0.15, ease:'power3.out'}, 0.2)
+    .from('.d1 svg, .d2 svg, .d3 svg', {yPercent:100, duration:1.6, stagger:0.15, ease:'power3.out', clearProps:'transform'}, 0.2)
     .to(paths, {strokeDashoffset:0, duration:2.6, stagger:0.12, ease:'power1.inOut'}, 0.6)
     .to('.wordmark span', {y:0, duration:1.1, stagger:0.12, ease:'power3.out'}, 2.2)
     .to('.hero-sub', {opacity:1, duration:1.4}, 3.0)
     .to('.scroll-hint', {opacity:0.85, duration:1.2}, 3.6);
-
-  /* ---- hero parallax on scroll ---- */
-  gsap.to('.hero-center', {yPercent:-18, opacity:0.0, ease:'none',
-    scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}});
-  gsap.to('.d1 svg', {yPercent:24, ease:'none', scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}});
-  gsap.to('.d2 svg', {yPercent:14, ease:'none', scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}});
-  gsap.to('.sun', {yPercent:60, ease:'none', scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}});
 
   /* ---- myth word reveals ---- */
   document.querySelectorAll('.myth-line').forEach(function(line){
