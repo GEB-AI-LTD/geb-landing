@@ -310,10 +310,27 @@
     });
   });
 
-  if (reduced || !window.gsap || !window.ScrollTrigger){
+  function forceReveal(){
     document.documentElement.classList.add('no-anim');
+    document.querySelectorAll('#gebline path').forEach(function(p){
+      p.style.strokeDasharray = 'none'; p.style.strokeDashoffset = '0';
+    });
+    document.querySelectorAll('.dunes svg').forEach(function(d){ d.style.transform = 'none'; });
+    document.querySelectorAll('.wordmark span').forEach(function(s){ s.style.transform = 'none'; });
+  }
+  if (reduced || !window.gsap || !window.ScrollTrigger){
+    forceReveal();
     return;
   }
+  setTimeout(function(){
+    var p = document.querySelector('#gebline path');
+    var stalled = p && parseFloat(p.style.strokeDashoffset || '0') > 1;
+    var s = document.querySelector('.wordmark span');
+    var m = s && getComputedStyle(s).transform;
+    var hidden = m && m !== 'none' && Math.abs(parseFloat(m.split(',').pop()) || 0) > 5;
+    if (stalled || hidden) forceReveal();
+  }, 6000);
+  try {
   gsap.registerPlugin(ScrollTrigger);
 
   /* ---- cursor parallax on hero ---- */
@@ -368,6 +385,7 @@
     scrollTrigger:{trigger:'.reveal-stage', start:'top 75%', end:'top 25%', scrub:true}});
   gsap.from('.cartouche', {opacity:0, y:60, duration:1.4, ease:'power2.out',
     scrollTrigger:{trigger:'.reveal-stage', start:'top 85%'}});
+  } catch(e){ forceReveal(); }
 })();
 </script>
 </body>
