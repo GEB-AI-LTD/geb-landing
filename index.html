@@ -117,7 +117,7 @@
   <div class="sun" aria-hidden="true"></div>
 
   <div class="hero-center">
-    <svg class="geb-line" id="gebline" viewBox="0 0 400 520" role="img" aria-label="Line drawing of Geb, the Egyptian god of the earth, with a goose upon his head">
+    <svg class="geb-line" id="gebline" viewBox="76 10 308 420" role="img" aria-label="Line drawing of Geb, the Egyptian god of the earth, with a goose upon his head">
       <path class="goose-body" d="M150 96 C150 76 168 60 196 58 C224 56 246 66 252 84 C256 96 250 106 236 110 L180 112 C162 112 150 106 150 96 Z"/>
       <path class="goose-neck" d="M238 86 C252 80 260 68 261 52 C262 40 256 30 246 28 C238 26 232 32 233 40 C234 46 240 48 244 44"/>
       <path class="goose-beak thin" d="M246 28 L268 24 L247 36"/>
@@ -211,11 +211,16 @@
   }
   function drawStars(t){
     sx.clearRect(0,0,sc.width,sc.height);
+    var sy = window.scrollY * devicePixelRatio, sr = 160 * devicePixelRatio;
     for (var i = 0; i < stars.length; i++){
       var st = stars[i];
       var fade = 1 - (st.y/(sc.height*0.7));
       var tw = reduced ? 0.8 : 0.55 + 0.45*Math.sin(t/900*st.s + st.p);
-      sx.globalAlpha = Math.max(0, fade*tw*0.9);
+      if (!reduced && mx > -1e4){
+        var dx = st.x - mx, dy = (st.y - sy) - my, d = Math.sqrt(dx*dx+dy*dy);
+        if (d < sr) tw = Math.min(1.25, tw + (1 - d/sr) * 0.45);
+      }
+      sx.globalAlpha = Math.max(0, Math.min(1, fade*tw*0.9));
       sx.fillStyle = '#f4e2bd';
       sx.beginPath(); sx.arc(st.x, st.y, st.r, 0, 6.283); sx.fill();
     }
@@ -224,6 +229,14 @@
 
   /* ---- drifting sand ---- */
   var pc = document.getElementById('sand-canvas'), px = pc.getContext('2d'), grains = [];
+  var mx = -1e5, my = -1e5, gx = -1e5, gy = -1e5;
+  if (!reduced){
+    addEventListener('pointermove', function(e){
+      mx = e.clientX * devicePixelRatio; my = e.clientY * devicePixelRatio;
+      if (gx < -1e4){ gx = mx; gy = my; }
+    }, {passive:true});
+    addEventListener('pointerleave', function(){ mx = -1e5; my = -1e5; });
+  }
   function sizeSand(){
     pc.width = innerWidth*devicePixelRatio; pc.height = innerHeight*devicePixelRatio;
     grains = [];
@@ -240,12 +253,32 @@
   }
   function drawSand(t){
     px.clearRect(0,0,pc.width,pc.height);
+    if (mx > -1e4){
+      gx += (mx - gx) * 0.05; gy += (my - gy) * 0.05;
+      var gr = 200 * devicePixelRatio;
+      var grd = px.createRadialGradient(gx, gy, 0, gx, gy, gr);
+      grd.addColorStop(0, 'rgba(232,201,138,0.045)');
+      grd.addColorStop(1, 'rgba(232,201,138,0)');
+      px.globalAlpha = 1; px.fillStyle = grd;
+      px.fillRect(gx-gr, gy-gr, gr*2, gr*2);
+    }
     px.fillStyle = '#e8c98a';
+    var r0 = 130 * devicePixelRatio;
     for (var i = 0; i < grains.length; i++){
       var g = grains[i];
       g.x += g.vx*(1+0.4*Math.sin(t/2400)); g.y += g.vy + 0.18*Math.sin(t/700+g.w);
+      var glow = 0;
+      if (mx > -1e4){
+        var dx = g.x - mx, dy = g.y - my, d = Math.sqrt(dx*dx+dy*dy);
+        if (d < r0 && d > 0.001){
+          var f = (1 - d/r0);
+          g.x += (dx/d) * f * 0.55 * devicePixelRatio;
+          g.y += (dy/d) * f * 0.40 * devicePixelRatio;
+          glow = f * 0.18;
+        }
+      }
       if (g.x < -10) grains[i] = newGrain(false);
-      px.globalAlpha = g.a;
+      px.globalAlpha = Math.min(0.6, g.a + glow);
       px.beginPath(); px.arc(g.x, g.y, g.r, 0, 6.283); px.fill();
     }
   }
