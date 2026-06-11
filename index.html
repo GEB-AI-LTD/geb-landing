@@ -43,41 +43,25 @@
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");}
 
   /* ---------- HERO ---------- */
-  .hero{position:relative;height:100vh;min-height:640px;overflow:hidden;
+  .hero{position:relative;height:100vh;height:100svh;min-height:640px;overflow:hidden;
     background:linear-gradient(180deg,var(--s1) 0%,var(--s2) 28%,var(--s3) 58%,var(--s4) 82%,var(--s5) 100%);
     transition:background 2s linear;}
   #stars{position:absolute;inset:0;width:100%;height:100%}
   .sun{position:absolute;left:calc(50% - 23vmin);top:calc(var(--sunY) - 23vmin);width:46vmin;height:46vmin;
     border-radius:50%;background:radial-gradient(circle,var(--glowA) 0%,var(--glowB) 45%,transparent 70%);
-    filter:blur(2px);transition:top 2s linear;}
+    filter:blur(2px);transition:top 2s linear;opacity:0;transform:scale(0.6);}
   .dunes{position:absolute;left:0;right:0;bottom:0;width:100%;pointer-events:none}
-  .dunes svg{display:block;width:100%;height:auto}
+  .dunes svg{display:block;width:100%;height:auto;transform:translateY(101%)}
   .d1{z-index:3}.d2{z-index:4}.d3{z-index:5}
 
   .hero-center{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
-  .geb-line{width:min(46vmin,300px);height:auto;margin-bottom:2.2rem;
-    filter:drop-shadow(0 2px 2px rgba(40,24,4,0.45)) drop-shadow(0 1px 12px var(--halo)) drop-shadow(0 0 20px var(--gRad))}
+  .geb-line{width:min(46vmin,300px);height:auto;margin-bottom:2.2rem}
   .geb-line path{fill:none;stroke:url(#goldStroke);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
   .geb-line .thin{stroke-width:1.7;opacity:.85}
 
-  .wordmark{font-family:'Cinzel',serif;font-weight:700;letter-spacing:.42em;text-indent:.42em;
-    font-size:clamp(2.6rem,7vw,5.2rem);display:flex;overflow:hidden;
-    background:
-      linear-gradient(115deg, rgba(255,253,235,0) 42%, var(--glint) 50%, rgba(255,253,235,0) 58%),
-      linear-gradient(172deg,var(--g1) 0%,var(--g2) 12%,var(--g3) 30%,var(--g4) 46%,var(--g5) 57%,var(--g6) 68%,var(--g7) 84%,var(--g8) 100%);
-    background-size:260% 100%, 100% 240%;
-    background-position:-160% 0%, 0% 0%;
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-    animation:goldsheen 7s ease-in-out infinite}
   .wm-wrap{position:relative}
-  .wm-back{position:absolute;inset:0;background:none;-webkit-background-clip:border-box;background-clip:border-box;
-    color:rgba(35,22,6,0.55);-webkit-text-fill-color:rgba(35,22,6,0.55);animation:none;
-    transform:translateY(3px);filter:blur(4px);text-shadow:0 0 28px var(--gRad),0 2px 8px rgba(25,15,4,0.55)}
-  @keyframes goldsheen{
-    0%{background-position:-160% 0%, 0% 0%}
-    50%{background-position:260% 0%, 0% 60%}
-    100%{background-position:-160% 0%, 0% 0%}}
-  .wordmark span{display:inline-block;transform:translateY(110%)}
+  .wm-svg{display:block;width:min(72vw,560px);height:auto;opacity:0;transform:translateY(26px)}
+  .wm-svg text{font-family:'Cinzel',serif;font-weight:700;font-size:78px;letter-spacing:0.42em}
   .hero-sub{margin-top:1.4rem;font-size:clamp(1.05rem,2.2vw,1.45rem);font-weight:300;
     letter-spacing:.34em;text-indent:.34em;text-transform:uppercase;color:var(--heroInkDim);opacity:0;
     text-shadow:0 1px 18px var(--halo), 0 0 8px var(--halo);transition:color 1.2s linear}
@@ -113,7 +97,8 @@
   /* ---------- REVEAL ---------- */
   .reveal{position:relative;background:var(--deep);padding:8vh 8vw 16vh;text-align:center;overflow:hidden}
   .reveal-stage{position:relative;max-width:520px;margin:0 auto;z-index:1}
-  .cartouche{position:relative;padding:9% 7%;border:1px solid rgba(212,164,72,.45);border-radius:200px 200px 14px 14px}
+  .cartouche{position:relative;padding:9% 7%;border:1px solid rgba(212,164,72,.45);border-radius:200px 200px 14px 14px;
+    opacity:0;transform:translateY(60px)}
   .cartouche::before{content:"";position:absolute;inset:10px;border:1px solid rgba(212,164,72,.22);border-radius:190px 190px 10px 10px}
   .reveal-img{width:100%;height:auto;display:block;clip-path:inset(0 0 100% 0);
     filter:sepia(.25) saturate(.92) contrast(1.02);}
@@ -130,7 +115,10 @@
   .foot-domain{margin-top:1.2rem;font-size:.85rem;letter-spacing:.22em;color:rgba(207,169,122,.55)}
   .foot-domain a{color:inherit;text-decoration:none}
 
-  html.no-anim .wordmark span{transform:none}
+  html.no-anim .wm-svg{opacity:1!important;transform:none!important}
+  html.no-anim .sun{opacity:1!important;transform:none!important}
+  html.no-anim .dunes svg{transform:none!important}
+  html.no-anim .cartouche{opacity:1!important;transform:none!important}
   html.no-anim .hero-sub, html.no-anim .scroll-hint, html.no-anim .myth-small,
   html.no-anim .reveal-cap, html.no-anim .glyph-row{opacity:1}
   html.no-anim .myth-line .w{opacity:1;transform:none;filter:none}
@@ -138,12 +126,14 @@
   html.no-anim .rule{width:min(420px,60vw)}
 
   @media (prefers-reduced-motion: reduce){
-    .wordmark span{transform:none}
+    .wm-svg{opacity:1;transform:none}
+    .sun{opacity:1;transform:none}
+    .dunes svg{transform:none}
+    .cartouche{opacity:1;transform:none}
     .hero-sub,.scroll-hint,.myth-small,.reveal-cap,.glyph-row{opacity:1}
     .myth-line .w{opacity:1;transform:none;filter:none}
     .reveal-img{clip-path:none}
     .scroll-hint .bar{animation:none}
-    .wordmark{animation:none}
   }
 </style>
 </head>
@@ -188,10 +178,33 @@
       <path class="staff thin" d="M352 250 C360 244 366 248 364 256 L356 420"/>
     </svg>
 
-    <div class="wm-wrap">
-      <div class="wordmark wm-back" aria-hidden="true"><span>G</span><span>E</span><span>B</span></div>
-      <h1 class="wordmark" aria-label="GEB"><span>G</span><span>E</span><span>B</span></h1>
-    </div>
+    <h1 class="wm-wrap" aria-label="GEB">
+      <svg class="wm-svg" viewBox="0 0 600 120" role="img" aria-label="GEB">
+        <defs>
+          <linearGradient id="wmGold" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" style="stop-color:var(--g1)"/>
+            <stop offset="0.18" style="stop-color:var(--g3)"/>
+            <stop offset="0.38" style="stop-color:var(--g6)"/>
+            <stop offset="0.52" style="stop-color:var(--g4)"/>
+            <stop offset="0.66" style="stop-color:var(--g5)"/>
+            <stop offset="0.82" style="stop-color:var(--g2)"/>
+            <stop offset="1" style="stop-color:var(--g8)"/>
+          </linearGradient>
+          <linearGradient id="wmGlint" x1="0" y1="0" x2="1" y2="0.12">
+            <stop offset="0.40" stop-color="#fffdf0" stop-opacity="0"/>
+            <stop offset="0.50" stop-color="#fffdf0" stop-opacity="0.8"/>
+            <stop offset="0.60" stop-color="#fffdf0" stop-opacity="0"/>
+            <animateTransform attributeName="gradientTransform" type="translate" values="-1.1 0; 1.1 0; -1.1 0" dur="7s" repeatCount="indefinite"/>
+          </linearGradient>
+          <filter id="wmBlur" x="-20%" y="-40%" width="140%" height="180%">
+            <feGaussianBlur stdDeviation="4"/>
+          </filter>
+        </defs>
+        <text x="316" y="89" text-anchor="middle" fill="rgba(35,22,6,0.55)" filter="url(#wmBlur)" transform="translate(0,3)">G E B</text>
+        <text x="316" y="86" text-anchor="middle" fill="url(#wmGold)">G E B</text>
+        <text x="316" y="86" text-anchor="middle" fill="url(#wmGlint)">G E B</text>
+      </svg>
+    </h1>
     <p class="hero-sub">He holds the earth</p>
   </div>
 
@@ -514,7 +527,12 @@
       p.style.strokeDasharray = 'none'; p.style.strokeDashoffset = '0';
     });
     document.querySelectorAll('.dunes svg').forEach(function(d){ d.style.transform = 'none'; });
-    document.querySelectorAll('.wordmark span').forEach(function(s){ s.style.transform = 'none'; });
+    var wm = document.querySelector('.wm-svg');
+    if (wm){ wm.style.opacity = '1'; wm.style.transform = 'none'; }
+    var sun = document.querySelector('.sun');
+    if (sun){ sun.style.opacity = '1'; sun.style.transform = 'none'; }
+    var car = document.querySelector('.cartouche');
+    if (car){ car.style.opacity = '1'; car.style.transform = 'none'; }
   }
   if (reduced || !window.gsap || !window.ScrollTrigger){
     forceReveal();
@@ -523,9 +541,8 @@
   setTimeout(function(){
     var p = document.querySelector('#gebline path');
     var stalled = p && parseFloat(p.style.strokeDashoffset || '0') > 1;
-    var s = document.querySelector('.wordmark span');
-    var m = s && getComputedStyle(s).transform;
-    var hidden = m && m !== 'none' && Math.abs(parseFloat(m.split(',').pop()) || 0) > 5;
+    var wm = document.querySelector('.wm-svg');
+    var hidden = wm && parseFloat(getComputedStyle(wm).opacity) < 0.5;
     if (stalled || hidden) forceReveal();
   }, 6000);
   try {
@@ -554,15 +571,18 @@
       gsap.to('.d1 svg', {yPercent:24, ease:'none', scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}});
       gsap.to('.d2 svg', {yPercent:14, ease:'none', scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}});
       gsap.to('.sun', {yPercent:60, ease:'none', scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom top', scrub:true}});
-      gsap.to('.wordmark', {y:7, duration:4.6, yoyo:true, repeat:-1, ease:'sine.inOut'});
+      gsap.to('.wm-wrap', {y:7, duration:4.6, yoyo:true, repeat:-1, ease:'sine.inOut'});
       ScrollTrigger.refresh();
     }});
-  intro.from('.sun', {opacity:0, scale:0.6, transformOrigin:'center', duration:2.2, ease:'power1.out'}, 0)
-    .from('.d1 svg, .d2 svg, .d3 svg', {yPercent:100, duration:1.6, stagger:0.15, ease:'power3.out', clearProps:'transform'}, 0.2)
+  intro.to('.sun', {opacity:1, scale:1, transformOrigin:'center', duration:2.2, ease:'power1.out'}, 0)
+    .to('.d1 svg, .d2 svg, .d3 svg', {y:0, duration:1.6, stagger:0.15, ease:'power3.out'}, 0.2)
     .to(paths, {strokeDashoffset:0, duration:2.6, stagger:0.12, ease:'power1.inOut'}, 0.6)
-    .to('.wordmark span', {y:0, duration:1.1, stagger:0.12, ease:'power3.out'}, 2.2)
+    .to('.wm-svg', {opacity:1, y:0, duration:1.2, ease:'power3.out'}, 2.2)
     .to('.hero-sub', {opacity:1, duration:1.4}, 3.0)
     .to('.scroll-hint', {opacity:0.85, duration:1.2}, 3.6);
+  if (document.fonts && document.fonts.ready){
+    document.fonts.ready.then(function(){ ScrollTrigger.refresh(); });
+  }
 
   /* ---- myth word reveals ---- */
   document.querySelectorAll('.myth-line').forEach(function(line){
@@ -588,7 +608,7 @@
   /* ---- illustration reveal ---- */
   gsap.to('#revealimg', {clipPath:'inset(0 0 0% 0)', ease:'none',
     scrollTrigger:{trigger:'#revealimg', start:'top bottom', end:'bottom bottom', scrub:true}});
-  gsap.from('.cartouche', {opacity:0, y:60, duration:1.4, ease:'power2.out',
+  gsap.to('.cartouche', {opacity:1, y:0, duration:1.4, ease:'power2.out',
     scrollTrigger:{trigger:'.reveal-stage', start:'top 85%'}});
   } catch(e){ forceReveal(); }
 })();
