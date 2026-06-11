@@ -97,7 +97,7 @@
   .myth-block{max-width:880px;margin:0 auto 32vh;position:relative;z-index:1}
   .myth-block::before{content:"";position:absolute;inset:-12% -16%;z-index:-1;border-radius:50%;
     background:radial-gradient(ellipse at center, rgba(18,11,5,0.5) 0%, rgba(18,11,5,0.26) 48%, transparent 74%)}
-  .myth-block:last-child{margin-bottom:10vh}
+  .myth-block:last-child{margin-bottom:10vh;text-align:center}
   .myth-line{font-size:clamp(1.7rem,4.2vw,3.1rem);font-weight:300;line-height:1.5;color:var(--paper)}
   .myth-line em{font-style:italic;color:var(--gold)}
   .myth-line .w{display:inline-block;opacity:0;transform:translateY(.5em);filter:blur(6px)}
@@ -563,7 +563,7 @@
 
   /* ---- illustration reveal ---- */
   gsap.to('#revealimg', {clipPath:'inset(0 0 0% 0)', ease:'none',
-    scrollTrigger:{trigger:'.reveal-stage', start:'top 75%', end:'top 25%', scrub:true}});
+    scrollTrigger:{trigger:'#revealimg', start:'top bottom', end:'bottom bottom', scrub:true}});
   gsap.from('.cartouche', {opacity:0, y:60, duration:1.4, ease:'power2.out',
     scrollTrigger:{trigger:'.reveal-stage', start:'top 85%'}});
   } catch(e){ forceReveal(); }
