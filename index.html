@@ -50,7 +50,7 @@
   .sun{position:absolute;left:calc(50% - 23vmin);top:calc(var(--sunY) - 23vmin);width:46vmin;height:46vmin;
     border-radius:50%;background:radial-gradient(circle,var(--glowA) 0%,var(--glowB) 45%,transparent 70%);
     filter:blur(2px);transition:top 2s linear;opacity:0;transform:scale(0.6);}
-  .dunes{position:absolute;left:0;right:0;bottom:0;width:100%;pointer-events:none}
+  .dunes{position:absolute;left:-36px;right:-36px;bottom:0;pointer-events:none}
   .dunes svg{display:block;width:100%;height:auto;transform:translateY(101%)}
   .d1{z-index:3}.d2{z-index:4}.d3{z-index:5}
 
@@ -532,8 +532,9 @@
   try {
   gsap.registerPlugin(ScrollTrigger);
 
-  /* ---- cursor parallax on hero ---- */
+  /* ---- cursor parallax on hero (mouse only, not touch) ---- */
   var hero = document.getElementById('hero');
+  if (window.matchMedia('(pointer: fine)').matches)
   hero.addEventListener('pointermove', function(e){
     var rx = (e.clientX/innerWidth - 0.5), ry = (e.clientY/innerHeight - 0.5);
     gsap.to('.geb-line', {x: rx*14, y: ry*10, duration:1.1, ease:'power2.out', overwrite:'auto'});
