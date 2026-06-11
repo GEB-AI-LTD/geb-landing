@@ -21,6 +21,8 @@
     --glowA:rgba(244,196,110,0.32); --glowB:rgba(212,164,72,0.12); --sunY:58%;
     --halo:rgba(20,12,5,0.2);
     --heroInk:#f3e3c3; --heroInkDim:#cfa97a; --figStroke:#d4a448;
+    --g1:#fff6cf; --g2:#f3cf6f; --g3:#e8b84e; --g4:#8a5c14; --g5:#ecc15e; --g6:#ffe9a3; --g7:#c08c2c; --g8:#6e4c10;
+    --glint:rgba(255,252,228,0.95); --gRad:rgba(255,205,100,0.3);
     --cracks:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='360'%3E%3Cg fill='none' stroke-linecap='round'%3E%3Cg stroke='%23e8c98a' stroke-opacity='0.07' stroke-width='1.4' transform='translate(0,1.8)'%3E%3Cpath d='M22 62 C88 50 152 74 232 60 C308 50 362 76 428 64'/%3E%3Cpath d='M212 61 C220 88 210 112 226 136 C232 148 226 162 234 172'/%3E%3Cpath d='M72 168 C140 178 202 152 288 166 C368 178 438 154 498 168'/%3E%3Cpath d='M298 165 C290 140 306 122 296 98'/%3E%3Cpath d='M12 268 C82 252 168 280 258 262 C348 246 432 274 506 258'/%3E%3Cpath d='M122 266 C132 292 118 312 132 334'/%3E%3Cpath d='M382 268 C392 292 386 312 398 330'/%3E%3Cpath d='M452 58 C460 82 452 98 464 114'/%3E%3Cpath d='M348 330 C356 344 350 354 358 360'/%3E%3C/g%3E%3Cg stroke='%23000000' stroke-opacity='0.30' stroke-width='1.4'%3E%3Cpath d='M22 62 C88 50 152 74 232 60 C308 50 362 76 428 64'/%3E%3Cpath d='M212 61 C220 88 210 112 226 136 C232 148 226 162 234 172'/%3E%3Cpath d='M72 168 C140 178 202 152 288 166 C368 178 438 154 498 168'/%3E%3Cpath d='M298 165 C290 140 306 122 296 98'/%3E%3Cpath d='M12 268 C82 252 168 280 258 262 C348 246 432 274 506 258'/%3E%3Cpath d='M122 266 C132 292 118 312 132 334'/%3E%3Cpath d='M382 268 C392 292 386 312 398 330'/%3E%3Cpath d='M452 58 C460 82 452 98 464 114'/%3E%3Cpath d='M348 330 C356 344 350 354 358 360'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
   *{margin:0;padding:0;box-sizing:border-box}
@@ -51,20 +53,21 @@
   .d1{z-index:3}.d2{z-index:4}.d3{z-index:5}
 
   .hero-center{position:absolute;inset:0;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
-  .geb-line{width:min(46vmin,300px);height:auto;margin-bottom:2.2rem;filter:drop-shadow(0 1px 12px var(--halo))}
-  .geb-line path{fill:none;stroke:var(--figStroke);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:stroke 1.2s linear}
-  .geb-line .thin{stroke-width:1.3;opacity:.85}
+  .geb-line{width:min(46vmin,300px);height:auto;margin-bottom:2.2rem;
+    filter:drop-shadow(0 2px 2px rgba(40,24,4,0.45)) drop-shadow(0 1px 12px var(--halo)) drop-shadow(0 0 20px var(--gRad))}
+  .geb-line path{fill:none;stroke:url(#goldStroke);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+  .geb-line .thin{stroke-width:1.7;opacity:.85}
 
   .wordmark{font-family:'Cinzel',serif;font-weight:700;letter-spacing:.42em;text-indent:.42em;
     font-size:clamp(2.6rem,7vw,5.2rem);display:flex;overflow:hidden;
     background:
-      linear-gradient(115deg, rgba(255,253,235,0) 42%, rgba(255,252,228,0.95) 50%, rgba(255,253,235,0) 58%),
-      linear-gradient(172deg,#fff6cf 0%,#f3cf6f 12%,#d09a2e 30%,#8a5c14 46%,#e8b84e 57%,#ffe9a3 68%,#c08c2c 84%,#6e4c10 100%);
+      linear-gradient(115deg, rgba(255,253,235,0) 42%, var(--glint) 50%, rgba(255,253,235,0) 58%),
+      linear-gradient(172deg,var(--g1) 0%,var(--g2) 12%,var(--g3) 30%,var(--g4) 46%,var(--g5) 57%,var(--g6) 68%,var(--g7) 84%,var(--g8) 100%);
     background-size:260% 100%, 100% 240%;
     background-position:-160% 0%, 0% 0%;
     -webkit-background-clip:text;background-clip:text;color:transparent;
     animation:goldsheen 7s ease-in-out infinite;
-    filter:drop-shadow(0 2px 2px rgba(50,30,4,0.6)) drop-shadow(0 6px 14px rgba(30,18,4,0.4)) drop-shadow(0 0 26px rgba(255,205,100,0.3))}
+    filter:drop-shadow(0 2px 2px rgba(50,30,4,0.6)) drop-shadow(0 6px 14px rgba(30,18,4,0.4)) drop-shadow(0 0 26px var(--gRad))}
   @keyframes goldsheen{
     0%{background-position:-160% 0%, 0% 0%}
     50%{background-position:260% 0%, 0% 60%}
@@ -150,6 +153,17 @@
 
   <div class="hero-center">
     <svg class="geb-line" id="gebline" viewBox="76 10 308 420" role="img" aria-label="Line drawing of Geb, the Egyptian god of the earth, with a goose upon his head">
+      <defs>
+        <linearGradient id="goldStroke" gradientUnits="userSpaceOnUse" x1="76" y1="10" x2="76" y2="430">
+          <stop offset="0" style="stop-color:var(--g1)"/>
+          <stop offset="0.18" style="stop-color:var(--g3)"/>
+          <stop offset="0.38" style="stop-color:var(--g6)"/>
+          <stop offset="0.52" style="stop-color:var(--g4)"/>
+          <stop offset="0.66" style="stop-color:var(--g5)"/>
+          <stop offset="0.82" style="stop-color:var(--g2)"/>
+          <stop offset="1" style="stop-color:var(--g8)"/>
+        </linearGradient>
+      </defs>
       <path class="goose-body" d="M150 96 C150 76 168 60 196 58 C224 56 246 66 252 84 C256 96 250 106 236 110 L180 112 C162 112 150 106 150 96 Z"/>
       <path class="goose-neck" d="M238 86 C252 80 260 68 261 52 C262 40 256 30 246 28 C238 26 232 32 233 40 C234 46 240 48 244 44"/>
       <path class="goose-beak thin" d="M246 28 L268 24 L247 36"/>
@@ -236,17 +250,17 @@
   window.__starMul = 0.8; window.__accent = '#d4a448';
   var SKY = [
     {h:0,    s:['#04050a','#0a0c16','#101626','#1a2440','#243356'], d:['#15203a','#0d1424','#070b14'],
-     deep:'#0a0d16', deep2:'#0e1220', foot:'#06080f', g1:[150,180,255,0.15], g2:[120,150,230,0.07], sunY:30, stars:1.0, acc:'#7da2ff', halo:[5,8,20,0.18], br:0},
+     deep:'#0a0d16', deep2:'#0e1220', foot:'#06080f', g1:[150,180,255,0.15], g2:[120,150,230,0.07], sunY:30, stars:1.0, acc:'#7da2ff', halo:[5,8,20,0.18], br:0, ghi:'#dee6f2', gmid:'#a8842f', glo:'#3a2b0c', glint:[210,225,255,0.9], rad:[170,190,255,0.25]},
     {h:5,    s:['#06070f','#0e101d','#251a2b','#4e2e38','#825038'], d:['#3a2a30','#241a20','#120d12'],
-     deep:'#120e16', deep2:'#181018', foot:'#0a070c', g1:[244,170,120,0.18], g2:[200,140,100,0.08], sunY:86, stars:0.5, acc:'#caa482', halo:[20,12,18,0.25], br:0},
+     deep:'#120e16', deep2:'#181018', foot:'#0a070c', g1:[244,170,120,0.18], g2:[200,140,100,0.08], sunY:86, stars:0.5, acc:'#caa482', halo:[20,12,18,0.25], br:0, ghi:'#ecdacc', gmid:'#b08a3e', glo:'#46300f', glint:[238,214,200,0.85], rad:[225,175,145,0.28]},
     {h:7,    s:['#15141f','#2e2030','#6a4040','#b06a48','#eda060'], d:['#7e4e30','#48301e','#241409'],
-     deep:'#160e0c', deep2:'#1e130c', foot:'#0e0907', g1:[255,200,130,0.42], g2:[235,160,95,0.18], sunY:78, stars:0.1, acc:'#d4a448', halo:[40,22,12,0.4], br:0.15},
+     deep:'#160e0c', deep2:'#1e130c', foot:'#0e0907', g1:[255,200,130,0.42], g2:[235,160,95,0.18], sunY:78, stars:0.1, acc:'#d4a448', halo:[40,22,12,0.4], br:0.15, ghi:'#fff1d0', gmid:'#eaa843', glo:'#5e3c0e', glint:[255,228,185,0.95], rad:[255,170,90,0.4]},
     {h:12,   s:['#2b5d8f','#3b6da0','#5688b6','#8fb3cf','#dfca96'], d:['#c79b5e','#936d3d','#54381e'],
-     deep:'#1b2836', deep2:'#22303e', foot:'#101c28', g1:[255,244,200,0.5], g2:[250,225,160,0.2], sunY:22, stars:0, acc:'#d4a448', halo:[255,246,225,0.45], br:1},
+     deep:'#1b2836', deep2:'#22303e', foot:'#101c28', g1:[255,244,200,0.5], g2:[250,225,160,0.2], sunY:22, stars:0, acc:'#d4a448', halo:[255,246,225,0.45], br:1, ghi:'#fffef2', gmid:'#f6c94e', glo:'#7c5510', glint:[255,255,248,0.98], rad:[255,205,100,0.5]},
     {h:17.5, s:['#0d0705','#1a0f0a','#3a2417','#7a4a22','#b06f2e'], d:['#8a5524','#5c3618','#2a1810'],
-     deep:'#1a0f0a', deep2:'#241409', foot:'#120a06', g1:[244,196,110,0.32], g2:[212,164,72,0.12], sunY:58, stars:0.8, acc:'#d4a448', halo:[20,12,5,0.22], br:0},
+     deep:'#1a0f0a', deep2:'#241409', foot:'#120a06', g1:[244,196,110,0.32], g2:[212,164,72,0.12], sunY:58, stars:0.8, acc:'#d4a448', halo:[20,12,5,0.22], br:0, ghi:'#fff6cf', gmid:'#e8b84e', glo:'#6e4c10', glint:[255,252,228,0.95], rad:[255,205,100,0.3]},
     {h:20.5, s:['#05060c','#0b0d17','#181729','#2a2344','#383054'], d:['#1c2238','#121626','#0a0c14'],
-     deep:'#0d0f18', deep2:'#121424', foot:'#070810', g1:[180,190,255,0.18], g2:[150,160,235,0.08], sunY:78, stars:0.95, acc:'#7da2ff', halo:[8,10,24,0.2], br:0}
+     deep:'#0d0f18', deep2:'#121424', foot:'#070810', g1:[180,190,255,0.18], g2:[150,160,235,0.08], sunY:78, stars:0.95, acc:'#7da2ff', halo:[8,10,24,0.2], br:0, ghi:'#e6e8ee', gmid:'#ab8733', glo:'#3e2d0d', glint:[215,225,250,0.88], rad:[180,195,250,0.24]}
   ];
   function hx(c){ return [parseInt(c.slice(1,3),16), parseInt(c.slice(3,5),16), parseInt(c.slice(5,7),16)]; }
   function mixHex(a, b, t){
@@ -279,6 +293,18 @@
     R.setProperty('--sunY', (a.sunY + (b.sunY - a.sunY)*t).toFixed(1) + '%');
     var hl = mixArr(a.halo, b.halo, t);
     R.setProperty('--halo', 'rgba(' + Math.round(hl[0]) + ',' + Math.round(hl[1]) + ',' + Math.round(hl[2]) + ',' + hl[3].toFixed(3) + ')');
+    var ghi = mixHex(a.ghi, b.ghi, t), gmid = mixHex(a.gmid, b.gmid, t), glo = mixHex(a.glo, b.glo, t);
+    R.setProperty('--g1', ghi);
+    R.setProperty('--g2', mixHex(ghi, gmid, 0.5));
+    R.setProperty('--g3', gmid);
+    R.setProperty('--g4', mixHex(gmid, glo, 0.7));
+    R.setProperty('--g5', mixHex(gmid, ghi, 0.4));
+    R.setProperty('--g6', mixHex(ghi, gmid, 0.25));
+    R.setProperty('--g7', mixHex(gmid, glo, 0.45));
+    R.setProperty('--g8', glo);
+    var gl = mixArr(a.glint, b.glint, t), rd = mixArr(a.rad, b.rad, t);
+    R.setProperty('--glint', 'rgba(' + Math.round(gl[0]) + ',' + Math.round(gl[1]) + ',' + Math.round(gl[2]) + ',' + gl[3].toFixed(3) + ')');
+    R.setProperty('--gRad', 'rgba(' + Math.round(rd[0]) + ',' + Math.round(rd[1]) + ',' + Math.round(rd[2]) + ',' + rd[3].toFixed(3) + ')');
     var br = a.br + (b.br - a.br)*t;
     if (br >= 0.5){
       R.setProperty('--heroInk', '#2f2414');
