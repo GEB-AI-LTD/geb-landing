@@ -61,7 +61,7 @@
 
   .wm-wrap{position:relative}
   .wm-svg{display:block;width:min(72vw,560px);height:auto;opacity:0;transform:translateY(26px)}
-  .wm-svg text{font-family:'Cinzel',serif;font-weight:700;font-size:78px;letter-spacing:0.42em}
+  .wm-svg text{font-family:'Cinzel',serif;font-weight:700;font-size:78px}
   .hero-sub{margin-top:1.4rem;font-size:clamp(1.05rem,2.2vw,1.45rem);font-weight:300;
     letter-spacing:.34em;text-indent:.34em;text-transform:uppercase;color:var(--heroInkDim);opacity:0;
     text-shadow:0 1px 18px var(--halo), 0 0 8px var(--halo);transition:color 1.2s linear}
@@ -147,7 +147,7 @@
   <div class="sun" aria-hidden="true"></div>
 
   <div class="hero-center">
-    <svg class="geb-line" id="gebline" viewBox="76 10 308 420" role="img" aria-label="Line drawing of Geb, the Egyptian god of the earth, with a goose upon his head">
+    <svg class="geb-line" id="gebline" viewBox="64 10 308 420" role="img" aria-label="Line drawing of Geb, the Egyptian god of the earth, with a goose upon his head">
       <defs>
         <linearGradient id="goldStroke" gradientUnits="userSpaceOnUse" x1="76" y1="10" x2="76" y2="430">
           <stop offset="0" style="stop-color:var(--g1)"/>
@@ -192,17 +192,17 @@
           </linearGradient>
           <linearGradient id="wmGlint" x1="0" y1="0" x2="1" y2="0.12">
             <stop offset="0.40" stop-color="#fffdf0" stop-opacity="0"/>
-            <stop offset="0.50" stop-color="#fffdf0" stop-opacity="0.8"/>
+            <stop offset="0.50" stop-color="#fffdf0" stop-opacity="0.4"/>
             <stop offset="0.60" stop-color="#fffdf0" stop-opacity="0"/>
-            <animateTransform attributeName="gradientTransform" type="translate" values="-1.1 0; 1.1 0; -1.1 0" dur="7s" repeatCount="indefinite"/>
+            <animateTransform attributeName="gradientTransform" type="translate" values="-1.1 0; 1.1 0; -1.1 0" dur="11s" repeatCount="indefinite"/>
           </linearGradient>
           <filter id="wmBlur" x="-20%" y="-40%" width="140%" height="180%">
             <feGaussianBlur stdDeviation="4"/>
           </filter>
         </defs>
-        <text x="316" y="89" text-anchor="middle" fill="rgba(35,22,6,0.55)" filter="url(#wmBlur)" transform="translate(0,3)">G E B</text>
-        <text x="316" y="86" text-anchor="middle" fill="url(#wmGold)">G E B</text>
-        <text x="316" y="86" text-anchor="middle" fill="url(#wmGlint)">G E B</text>
+        <text x="150 300 450" y="89" text-anchor="middle" fill="rgba(35,22,6,0.55)" filter="url(#wmBlur)" transform="translate(0,3)">GEB</text>
+        <text x="150 300 450" y="86" text-anchor="middle" fill="url(#wmGold)">GEB</text>
+        <text x="150 300 450" y="86" text-anchor="middle" fill="url(#wmGlint)">GEB</text>
       </svg>
     </h1>
     <p class="hero-sub">He holds the earth</p>
