@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>GEB</title>
 <meta name="description" content="GEB. He holds the earth.">
 <meta property="og:title" content="GEB">
@@ -26,9 +26,11 @@
     --cracks:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='360'%3E%3Cg fill='none' stroke-linecap='round'%3E%3Cg stroke='%23e8c98a' stroke-opacity='0.07' stroke-width='1.4' transform='translate(0,1.8)'%3E%3Cpath d='M22 62 C88 50 152 74 232 60 C308 50 362 76 428 64'/%3E%3Cpath d='M212 61 C220 88 210 112 226 136 C232 148 226 162 234 172'/%3E%3Cpath d='M72 168 C140 178 202 152 288 166 C368 178 438 154 498 168'/%3E%3Cpath d='M298 165 C290 140 306 122 296 98'/%3E%3Cpath d='M12 268 C82 252 168 280 258 262 C348 246 432 274 506 258'/%3E%3Cpath d='M122 266 C132 292 118 312 132 334'/%3E%3Cpath d='M382 268 C392 292 386 312 398 330'/%3E%3Cpath d='M452 58 C460 82 452 98 464 114'/%3E%3Cpath d='M348 330 C356 344 350 354 358 360'/%3E%3C/g%3E%3Cg stroke='%23000000' stroke-opacity='0.30' stroke-width='1.4'%3E%3Cpath d='M22 62 C88 50 152 74 232 60 C308 50 362 76 428 64'/%3E%3Cpath d='M212 61 C220 88 210 112 226 136 C232 148 226 162 234 172'/%3E%3Cpath d='M72 168 C140 178 202 152 288 166 C368 178 438 154 498 168'/%3E%3Cpath d='M298 165 C290 140 306 122 296 98'/%3E%3Cpath d='M12 268 C82 252 168 280 258 262 C348 246 432 274 506 258'/%3E%3Cpath d='M122 266 C132 292 118 312 132 334'/%3E%3Cpath d='M382 268 C392 292 386 312 398 330'/%3E%3Cpath d='M452 58 C460 82 452 98 464 114'/%3E%3Cpath d='M348 330 C356 344 350 354 358 360'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  html{scroll-behavior:auto}
+  html{scroll-behavior:auto;background:var(--s1)}
   body{
-    background:var(--dusk);
+    background:var(--s1);
+    min-height:100svh;
+    min-height:100dvh;
     color:var(--paper);
     font-family:'Cormorant Garamond',Georgia,serif;
     overflow-x:hidden;
@@ -66,8 +68,11 @@
     background-size:260% 100%, 100% 240%;
     background-position:-160% 0%, 0% 0%;
     -webkit-background-clip:text;background-clip:text;color:transparent;
-    animation:goldsheen 7s ease-in-out infinite;
-    filter:drop-shadow(0 2px 2px rgba(50,30,4,0.6)) drop-shadow(0 6px 14px rgba(30,18,4,0.4)) drop-shadow(0 0 26px var(--gRad))}
+    animation:goldsheen 7s ease-in-out infinite}
+  .wm-wrap{position:relative}
+  .wm-back{position:absolute;inset:0;background:none;-webkit-background-clip:border-box;background-clip:border-box;
+    color:rgba(35,22,6,0.55);-webkit-text-fill-color:rgba(35,22,6,0.55);animation:none;
+    transform:translateY(3px);filter:blur(4px);text-shadow:0 0 28px var(--gRad),0 2px 8px rgba(25,15,4,0.55)}
   @keyframes goldsheen{
     0%{background-position:-160% 0%, 0% 0%}
     50%{background-position:260% 0%, 0% 60%}
@@ -183,7 +188,10 @@
       <path class="staff thin" d="M352 250 C360 244 366 248 364 256 L356 420"/>
     </svg>
 
-    <h1 class="wordmark" aria-label="GEB"><span>G</span><span>E</span><span>B</span></h1>
+    <div class="wm-wrap">
+      <div class="wordmark wm-back" aria-hidden="true"><span>G</span><span>E</span><span>B</span></div>
+      <h1 class="wordmark" aria-label="GEB"><span>G</span><span>E</span><span>B</span></h1>
+    </div>
     <p class="hero-sub">He holds the earth</p>
   </div>
 
@@ -247,6 +255,19 @@
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---- time-of-day sky ---- */
+  /* CANONICAL DARK ANCHOR — locked by Tomer 2026-06-11.
+     Reference palette (the warm dark "chocolate" rendering Tomer approved from phone screenshots):
+       sky top    near-black warm brown  ~#120800
+       sky mid    deep chocolate         ~#2a1000
+       sky lower  rich amber-brown       ~#7a3d10 -> #c4702a
+       dune dark  very deep brown        ~#1a0800
+       dune mid   warm amber             ~#8b4513 range
+       stars      warm cream dots, low opacity
+       figure     warm amber halo (gold bands, --gRad warm)
+       wordmark + tagline  cream/off-white ~#e8d5b0 range
+     This is produced by the dusk(17.5) -> nightfall blend in the SKY keyframes below.
+     DO NOT drift these warm-brown anchors when editing other hours; verify with ?t= around
+     the dusk-to-night window after any palette change. */
   window.__starMul = 0.8; window.__accent = '#d4a448';
   var SKY = [
     {h:0,    s:['#04050a','#0a0c16','#101626','#1a2440','#243356'], d:['#15203a','#0d1424','#070b14'],
@@ -283,6 +304,8 @@
     }
     var R = document.documentElement.style;
     for (var k = 0; k < 5; k++) R.setProperty('--s'+(k+1), mixHex(a.s[k], b.s[k], t));
+    var themeMeta = document.querySelector('meta[name="theme-color"]');
+    if (themeMeta) themeMeta.setAttribute('content', mixHex(a.s[0], b.s[0], t));
     R.setProperty('--duneA', mixHex(a.d[0], b.d[0], t));
     R.setProperty('--deep',  '#1a0f0a');
     R.setProperty('--deep2', '#241409');
@@ -323,8 +346,9 @@
       duneEls[dn].forEach(function(p){ p.setAttribute('fill', col); });
     }
   }
-  applySky();
-  setInterval(applySky, 300000);
+  function applySkySafe(){ try { applySky(); } catch(e){} }
+  applySkySafe();
+  setInterval(applySkySafe, 300000);
 
   /* ---- starfield ---- */
   var sc = document.getElementById('stars'), sx = sc.getContext('2d'), stars = [];
