@@ -211,25 +211,49 @@
   }
   function drawStars(t){
     sx.clearRect(0,0,sc.width,sc.height);
-    var sy = window.scrollY * devicePixelRatio, sr = 160 * devicePixelRatio;
+    var dpr = devicePixelRatio;
+    var sy = window.scrollY * dpr, sr = 200 * dpr;
+    var near = [];
     for (var i = 0; i < stars.length; i++){
       var st = stars[i];
       var fade = 1 - (st.y/(sc.height*0.7));
       var tw = reduced ? 0.8 : 0.55 + 0.45*Math.sin(t/900*st.s + st.p);
+      var prox = 0;
       if (!reduced && mx > -1e4){
         var dx = st.x - mx, dy = (st.y - sy) - my, d = Math.sqrt(dx*dx+dy*dy);
-        if (d < sr) tw = Math.min(1.25, tw + (1 - d/sr) * 0.45);
+        if (d < sr){
+          prox = 1 - d/sr;
+          tw = Math.min(1.35, tw + prox * 0.6);
+          near.push({s: st, prox: prox});
+        }
       }
       sx.globalAlpha = Math.max(0, Math.min(1, fade*tw*0.9));
       sx.fillStyle = '#f4e2bd';
-      sx.beginPath(); sx.arc(st.x, st.y, st.r, 0, 6.283); sx.fill();
+      sx.beginPath(); sx.arc(st.x, st.y, st.r*(1+prox*0.5), 0, 6.283); sx.fill();
+    }
+    if (near.length > 1){
+      near.sort(function(a,b){ return b.prox - a.prox; });
+      if (near.length > 10) near.length = 10;
+      var lr = 150 * dpr, drawn = 0;
+      sx.strokeStyle = '#d4a448'; sx.lineWidth = Math.max(1, 0.7*dpr);
+      for (var a = 0; a < near.length && drawn < 14; a++){
+        for (var b = a+1; b < near.length && drawn < 14; b++){
+          var ax = near[a].s.x, ay = near[a].s.y, bx = near[b].s.x, by = near[b].s.y;
+          var ddx = ax-bx, ddy = ay-by, pd = Math.sqrt(ddx*ddx+ddy*ddy);
+          if (pd < lr && pd > 8*dpr){
+            sx.globalAlpha = Math.min(near[a].prox, near[b].prox) * (1 - pd/lr) * 0.5;
+            sx.beginPath(); sx.moveTo(ax, ay); sx.lineTo(bx, by); sx.stroke();
+            drawn++;
+          }
+        }
+      }
     }
   }
   sizeStars(); addEventListener('resize', sizeStars);
 
   /* ---- drifting sand ---- */
   var pc = document.getElementById('sand-canvas'), px = pc.getContext('2d'), grains = [];
-  var mx = -1e5, my = -1e5, gx = -1e5, gy = -1e5;
+  var mx = -1e5, my = -1e5, gx = -1e5, gy = -1e5, pmx = -1e5, pmy = -1e5, sparks = [];
   if (!reduced){
     addEventListener('pointermove', function(e){
       mx = e.clientX * devicePixelRatio; my = e.clientY * devicePixelRatio;
@@ -253,17 +277,38 @@
   }
   function drawSand(t){
     px.clearRect(0,0,pc.width,pc.height);
+    var dpr = devicePixelRatio;
     if (mx > -1e4){
-      gx += (mx - gx) * 0.05; gy += (my - gy) * 0.05;
-      var gr = 200 * devicePixelRatio;
+      gx += (mx - gx) * 0.07; gy += (my - gy) * 0.07;
+      var gr = 280 * dpr;
       var grd = px.createRadialGradient(gx, gy, 0, gx, gy, gr);
-      grd.addColorStop(0, 'rgba(232,201,138,0.045)');
+      grd.addColorStop(0, 'rgba(238,196,120,0.11)');
+      grd.addColorStop(0.5, 'rgba(232,201,138,0.05)');
       grd.addColorStop(1, 'rgba(232,201,138,0)');
       px.globalAlpha = 1; px.fillStyle = grd;
       px.fillRect(gx-gr, gy-gr, gr*2, gr*2);
     }
+    if (pmx < -1e4){ pmx = mx; pmy = my; }
+    var cvx = mx - pmx, cvy = my - pmy;
+    var speed = Math.min(Math.sqrt(cvx*cvx + cvy*cvy), 60*dpr);
+    if (mx > -1e4 && speed > 2*dpr && sparks.length < 60){
+      for (var s = 0; s < Math.min(2, Math.round(speed/(12*dpr))); s++){
+        sparks.push({x: mx + (Math.random()-0.5)*30*dpr, y: my + (Math.random()-0.5)*30*dpr,
+          vx: -cvx*0.04 + (Math.random()-0.5)*0.6*dpr, vy: -cvy*0.04 - Math.random()*0.4*dpr,
+          life: 1, decay: 0.012 + Math.random()*0.012, r: (0.6+Math.random()*1.2)*dpr});
+      }
+    }
+    pmx = mx; pmy = my;
+    for (var k = sparks.length-1; k >= 0; k--){
+      var sp = sparks[k];
+      sp.x += sp.vx; sp.y += sp.vy; sp.vy -= 0.005*dpr; sp.life -= sp.decay;
+      if (sp.life <= 0){ sparks.splice(k,1); continue; }
+      px.globalAlpha = sp.life * 0.5;
+      px.fillStyle = '#f0c97e';
+      px.beginPath(); px.arc(sp.x, sp.y, sp.r*(0.5+sp.life*0.5), 0, 6.283); px.fill();
+    }
     px.fillStyle = '#e8c98a';
-    var r0 = 130 * devicePixelRatio;
+    var r0 = 170 * dpr;
     for (var i = 0; i < grains.length; i++){
       var g = grains[i];
       g.x += g.vx*(1+0.4*Math.sin(t/2400)); g.y += g.vy + 0.18*Math.sin(t/700+g.w);
@@ -272,13 +317,14 @@
         var dx = g.x - mx, dy = g.y - my, d = Math.sqrt(dx*dx+dy*dy);
         if (d < r0 && d > 0.001){
           var f = (1 - d/r0);
-          g.x += (dx/d) * f * 0.55 * devicePixelRatio;
-          g.y += (dy/d) * f * 0.40 * devicePixelRatio;
-          glow = f * 0.18;
+          var fe = f*f;
+          g.x += (dx/d) * fe * 1.6 * dpr - (dy/d) * fe * 0.9 * dpr;
+          g.y += (dy/d) * fe * 1.2 * dpr + (dx/d) * fe * 0.9 * dpr;
+          glow = f * 0.35;
         }
       }
       if (g.x < -10) grains[i] = newGrain(false);
-      px.globalAlpha = Math.min(0.6, g.a + glow);
+      px.globalAlpha = Math.min(0.75, g.a + glow);
       px.beginPath(); px.arc(g.x, g.y, g.r, 0, 6.283); px.fill();
     }
   }
