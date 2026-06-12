@@ -98,10 +98,35 @@
   .reveal{position:relative;background:var(--deep);padding:8vh 8vw 16vh;text-align:center;overflow:hidden}
   .reveal-stage{position:relative;max-width:520px;margin:0 auto;z-index:1}
   .cartouche{position:relative;padding:9% 7%;border:1px solid rgba(212,164,72,.45);border-radius:200px 200px 14px 14px;
-    opacity:0;transform:translateY(60px)}
-  .cartouche::before{content:"";position:absolute;inset:10px;border:1px solid rgba(212,164,72,.22);border-radius:190px 190px 10px 10px}
+    opacity:0;transform:translateY(60px);overflow:hidden;cursor:pointer}
+  .cartouche::before{content:"";position:absolute;inset:10px;border:1px solid rgba(212,164,72,.22);border-radius:190px 190px 10px 10px;pointer-events:none;z-index:2}
   .reveal-img{width:100%;height:auto;display:block;clip-path:inset(0 0 100% 0);
     filter:sepia(.25) saturate(.92) contrast(1.02);}
+
+  /* ---------- THE CRYPT DOOR · the illustration slides aside, the way in appears ---------- */
+  .door-slab{transition:transform 1.3s cubic-bezier(.65,0,.22,1), opacity 1.3s ease}
+  .cartouche.open .door-slab{transform:translateY(-106%);opacity:0}
+  .cartouche.open{cursor:default}
+  .door-form{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
+    gap:1.05rem;padding:16% 13%;opacity:0;pointer-events:none;transition:opacity .9s ease .5s;z-index:1}
+  .cartouche.open .door-form{opacity:1;pointer-events:auto}
+  .door-form label{display:block;text-align:left;font-size:.6rem;letter-spacing:.3em;
+    text-transform:uppercase;color:rgba(212,164,72,.78);margin-bottom:.4rem}
+  .door-form input{width:100%;padding:.65rem .85rem;background:rgba(0,0,0,.32);
+    border:1px solid rgba(212,164,72,.3);border-radius:8px;color:#f3e3c3;font-size:1rem;outline:none}
+  .door-form input:focus{border-color:rgba(212,164,72,.65)}
+  .door-enter{width:100%;padding:.72rem;border:none;border-radius:9px;cursor:pointer;
+    font-family:inherit;font-weight:600;font-size:1rem;color:#241604;
+    background:linear-gradient(180deg,#f4ddae,#d9a847 58%,#8a5c14)}
+  .door-err{min-height:1.1em;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;
+    color:rgba(231,140,110,.9);opacity:0;transition:opacity .4s ease}
+  .door-err.show{opacity:1}
+  .door-hint{margin-top:1.2rem;font-size:.62rem;letter-spacing:.34em;text-transform:uppercase;
+    color:rgba(212,164,72,0);transition:color .7s ease}
+  .reveal-stage:hover .door-hint{color:rgba(212,164,72,.5)}
+  .reveal-stage.opened .door-hint{color:rgba(212,164,72,0)}
+  html.no-anim .door-slab{transition:none}
+  html.no-anim .door-form{transition:none}
   .reveal-cap{margin-top:3rem;font-size:clamp(1.05rem,2vw,1.35rem);letter-spacing:.3em;text-transform:uppercase;
     color:var(--paper-dim);opacity:0}
   .glyph-row{display:flex;justify-content:center;gap:2.2rem;margin-top:3.2rem;opacity:0}
@@ -220,10 +245,23 @@
 
 <section class="reveal">
   <div class="strata" aria-hidden="true"></div>
-  <div class="reveal-stage">
-    <div class="cartouche">
-      <img class="reveal-img" id="revealimg" src="geb.png" alt="Illustration of Geb, the Egyptian god of the earth, crowned with a goose">
+  <div class="reveal-stage" id="doorstage">
+    <div class="cartouche" id="cryptdoor" role="button" tabindex="0" aria-label="Enter">
+      <img class="reveal-img door-slab" id="revealimg" src="geb.png" alt="Illustration of Geb, the Egyptian god of the earth, crowned with a goose">
+      <form class="door-form" id="doorform" autocomplete="off">
+        <div>
+          <label for="door-user">Username</label>
+          <input id="door-user" name="username" type="text" autocomplete="username" required>
+        </div>
+        <div>
+          <label for="door-pass">Password</label>
+          <input id="door-pass" name="password" type="password" autocomplete="current-password" required>
+        </div>
+        <button class="door-enter" type="submit">Enter</button>
+        <div class="door-err" id="doorerr" role="alert">Not recognized</div>
+      </form>
     </div>
+    <p class="door-hint" aria-hidden="true">Enter</p>
     <p class="reveal-cap" data-fade>Geb · God of ground</p>
     <div class="glyph-row" data-fade aria-hidden="true">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.5"/></svg>
@@ -596,6 +634,56 @@
   gsap.to('.cartouche', {opacity:1, y:0, duration:1.4, ease:'power2.out',
     scrollTrigger:{trigger:'.reveal-stage', start:'top 85%'}});
   } catch(e){ forceReveal(); }
+})();
+</script>
+<script>
+/* ---- the crypt door · click the illustration, the slab slides, the way in appears ---- */
+(function(){
+  var door = document.getElementById('cryptdoor');
+  var stage = document.getElementById('doorstage');
+  var form = document.getElementById('doorform');
+  var err = document.getElementById('doorerr');
+  if (!door || !form) return;
+  var DEMO = 'https://demo.geb-ai.com';
+
+  function open(){
+    if (door.classList.contains('open')) return;
+    door.classList.add('open');
+    if (stage) stage.classList.add('opened');
+    setTimeout(function(){
+      var u = document.getElementById('door-user');
+      if (u) u.focus();
+    }, 950);
+  }
+
+  door.addEventListener('click', function(){ open(); });
+  door.addEventListener('keydown', function(e){
+    if ((e.key === 'Enter' || e.key === ' ') && !door.classList.contains('open')){
+      e.preventDefault();
+      open();
+    }
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    err.classList.remove('show');
+    var btn = form.querySelector('.door-enter');
+    if (btn) btn.disabled = true;
+    fetch(DEMO + '/api/auth/login', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: document.getElementById('door-user').value,
+        password: document.getElementById('door-pass').value
+      })
+    }).then(function(r){
+      if (r.ok){ window.location.href = DEMO + '/dashboard'; }
+      else { err.classList.add('show'); if (btn) btn.disabled = false; }
+    }).catch(function(){
+      err.classList.add('show'); if (btn) btn.disabled = false;
+    });
+  });
 })();
 </script>
 </body>
