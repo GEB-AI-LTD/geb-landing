@@ -105,16 +105,27 @@
 
   /* ---------- THE CRYPT DOOR · the illustration slides aside, the way in appears ---------- */
   .door-slab{transition:transform 1.3s cubic-bezier(.65,0,.22,1), opacity 1.3s ease}
-  .cartouche.open .door-slab{transform:translateY(-106%);opacity:0}
+  .cartouche.open .door-slab{transform:translateY(106%);opacity:0}
   .cartouche.open{cursor:default}
   .door-form{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
-    gap:1.05rem;padding:16% 13%;opacity:0;pointer-events:none;transition:opacity .9s ease .5s;z-index:1}
+    gap:1.05rem;padding:28% 13% 14%;opacity:0;pointer-events:none;transition:opacity .9s ease .5s;z-index:1}
+  @media (max-width:540px){
+    .door-form{padding:34% 11% 14%;gap:.9rem}
+  }
   .cartouche.open .door-form{opacity:1;pointer-events:auto}
   .door-form label{display:block;text-align:left;font-size:.6rem;letter-spacing:.3em;
     text-transform:uppercase;color:rgba(212,164,72,.78);margin-bottom:.4rem}
   .door-form input{width:100%;padding:.65rem .85rem;background:rgba(0,0,0,.32);
     border:1px solid rgba(212,164,72,.3);border-radius:8px;color:#f3e3c3;font-size:1rem;outline:none}
   .door-form input:focus{border-color:rgba(212,164,72,.65)}
+  /* keep the browser's autofill from painting the fields yellow */
+  .door-form input:-webkit-autofill,
+  .door-form input:-webkit-autofill:hover,
+  .door-form input:-webkit-autofill:focus{
+    -webkit-box-shadow:0 0 0 1000px #1d130b inset;
+    -webkit-text-fill-color:#f3e3c3;
+    caret-color:#f3e3c3;
+    transition:background-color 99999s ease-in-out 0s}
   .door-enter{width:100%;padding:.72rem;border:none;border-radius:9px;cursor:pointer;
     font-family:inherit;font-weight:600;font-size:1rem;color:#241604;
     background:linear-gradient(180deg,#f4ddae,#d9a847 58%,#8a5c14)}
