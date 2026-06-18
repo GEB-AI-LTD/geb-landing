@@ -136,6 +136,19 @@
     color:rgba(212,164,72,0);transition:color .7s ease}
   .reveal-stage:hover .door-hint{color:rgba(212,164,72,.5)}
   .reveal-stage.opened .door-hint{color:rgba(212,164,72,0)}
+  /* request-access · "No key yet?" is plain label-style text; clicking reveals the field */
+  .request-access{margin-top:.6rem;text-align:center}
+  .ra-toggle{display:inline-block;font-family:inherit;background:transparent;border:0;outline:none;box-shadow:none;-webkit-appearance:none;appearance:none;padding:0;cursor:pointer;font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(212,164,72,.78);transition:color .3s ease}
+  .ra-toggle:hover,.ra-toggle[aria-expanded="true"]{color:rgba(212,164,72,1)}
+  .ra-fields{max-height:0;opacity:0;overflow:hidden;transition:max-height .5s ease,opacity .5s ease,margin-top .5s ease;margin-top:0}
+  .ra-fields.open{max-height:140px;opacity:1;margin-top:.7rem}
+  .ra-row{display:flex;gap:.5rem}
+  .ra-row input{flex:1;min-width:0;padding:.6rem .8rem;background:rgba(0,0,0,.28);border:1px solid rgba(212,164,72,.3);border-radius:8px;color:#f3e3c3;font-size:.95rem;outline:none}
+  .ra-row input:focus{border-color:rgba(212,164,72,.6)}
+  .ra-btn{padding:.6rem 1rem;border:1px solid rgba(212,164,72,.45);border-radius:8px;background:transparent;color:#e8c98a;font-family:inherit;font-size:.82rem;letter-spacing:.06em;cursor:pointer;white-space:nowrap}
+  .ra-btn:hover{background:rgba(212,164,72,.12)}
+  .ra-btn:disabled{opacity:.5;cursor:default}
+  .ra-msg{min-height:1.1em;margin-top:.6rem;font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(212,164,72,.85)}
   html.no-anim .door-slab{transition:none}
   html.no-anim .door-form{transition:none}
   .reveal-cap{margin-top:3rem;font-size:clamp(1.05rem,2vw,1.35rem);letter-spacing:.3em;text-transform:uppercase;
@@ -276,6 +289,17 @@
         </div>
         <button class="door-enter" type="submit">Enter</button>
         <div class="door-err" id="doorerr" role="alert">Not recognized</div>
+        <div class="request-access">
+          <input id="ra-company" name="ra_company" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0">
+          <button type="button" class="ra-toggle" id="ra-toggle" aria-expanded="false" aria-controls="ra-fields">No key yet?</button>
+          <div class="ra-fields" id="ra-fields">
+            <div class="ra-row">
+              <input id="ra-email" type="email" placeholder="your@email.com" autocomplete="email" aria-label="Email for access request">
+              <button type="button" class="ra-btn" id="ra-submit">Request access</button>
+            </div>
+            <div class="ra-msg" id="ra-msg" role="status"></div>
+          </div>
+        </div>
       </form>
     </div>
     <p class="door-hint" aria-hidden="true">Enter</p>
@@ -704,6 +728,31 @@
     }).catch(function(){
       err.classList.add('show'); if (btn) btn.disabled = false;
     });
+  });
+
+  // request-access · "No key yet?" reveals the field; the button posts the email
+  var raToggle = document.getElementById('ra-toggle');
+  var raFields = document.getElementById('ra-fields');
+  if (raToggle && raFields) raToggle.addEventListener('click', function(){
+    var isOpen = raFields.classList.toggle('open');
+    raToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    if (isOpen) { var em0 = document.getElementById('ra-email'); if (em0) setTimeout(function(){ em0.focus(); }, 80); }
+  });
+  var raSubmit = document.getElementById('ra-submit');
+  if (raSubmit) raSubmit.addEventListener('click', function(){
+    var em = document.getElementById('ra-email');
+    var msg = document.getElementById('ra-msg');
+    var fields = document.getElementById('ra-fields');
+    if (!em || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value)) { if (msg) msg.textContent = 'Please enter a valid email'; return; }
+    raSubmit.disabled = true; if (msg) msg.textContent = 'Sending…';
+    fetch(DEMO + '/api/lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: em.value, source: 'landing', ra_company: (document.getElementById('ra-company') || {}).value || '' })
+    }).then(function(r){
+      if (r.ok && fields){ fields.innerHTML = '<div class="ra-msg" style="color:rgba(212,164,72,.9)">Thank you. We will be in touch.</div>'; }
+      else if (msg) { msg.textContent = 'Please enter a valid email'; raSubmit.disabled = false; }
+    }).catch(function(){ if (msg) msg.textContent = 'Something went wrong. Try again.'; raSubmit.disabled = false; });
   });
 })();
 </script>
