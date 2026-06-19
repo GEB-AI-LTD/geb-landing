@@ -110,7 +110,12 @@
   .door-form{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
     gap:1.05rem;padding:28% 13% 14%;opacity:0;pointer-events:none;transition:opacity .9s ease .5s;z-index:1}
   @media (max-width:540px){
-    .door-form{padding:34% 11% 14%;gap:.9rem}
+    /* the door art is near-square so the arch is short. Keep it that size: anchor
+       the form just clear of the dome and keep rows tight so the request-access
+       row fits without growing the door or opening gaps between fields */
+    .door-form{padding:24% 10% 10%;gap:.55rem;justify-content:flex-start}
+    .door-form label{margin-bottom:.3rem}
+    .door-err{min-height:0}
   }
   .cartouche.open .door-form{opacity:1;pointer-events:auto}
   .door-form label{display:block;text-align:left;font-size:.6rem;letter-spacing:.3em;
@@ -149,6 +154,7 @@
   .ra-btn:hover{background:rgba(212,164,72,.12)}
   .ra-btn:disabled{opacity:.5;cursor:default}
   .ra-msg{min-height:1.1em;margin-top:.6rem;font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(212,164,72,.85)}
+  .ra-sent{margin-top:.2rem;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(212,164,72,.95);text-align:center}
   html.no-anim .door-slab{transition:none}
   html.no-anim .door-form{transition:none}
   .reveal-cap{margin-top:3rem;font-size:clamp(1.05rem,2vw,1.35rem);letter-spacing:.3em;text-transform:uppercase;
@@ -750,9 +756,21 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: em.value, source: 'landing', ra_company: (document.getElementById('ra-company') || {}).value || '' })
     }).then(function(r){
-      if (r.ok && fields){ fields.innerHTML = '<div class="ra-msg" style="color:rgba(212,164,72,.9)">Thank you. We will be in touch.</div>'; }
-      else if (msg) { msg.textContent = 'Please enter a valid email'; raSubmit.disabled = false; }
-    }).catch(function(){ if (msg) msg.textContent = 'Something went wrong. Try again.'; raSubmit.disabled = false; });
+      if (r.ok){
+        // success — swap the whole row for a confirmation so it is unmistakable
+        if (fields) fields.innerHTML = '<div class="ra-sent">Request received. We’ll be in touch.</div>';
+        return;
+      }
+      // server reached but refused (bad email, rate limit, ...) — surface its reason
+      return r.json().then(function(d){ return d; }, function(){ return {}; }).then(function(d){
+        if (msg) msg.textContent = (d && d.message) ? d.message : 'Could not send. Please try again.';
+        raSubmit.disabled = false;
+      });
+    }).catch(function(){
+      // never reached the server (offline / blocked) — say so honestly
+      if (msg) msg.textContent = 'Could not reach the server. Please try again.';
+      raSubmit.disabled = false;
+    });
   });
 })();
 </script>
