@@ -386,8 +386,10 @@
     }
     var R = document.documentElement.style;
     for (var k = 0; k < 5; k++) R.setProperty('--s'+(k+1), mixHex(a.s[k], b.s[k], t));
-    var themeMeta = document.querySelector('meta[name="theme-color"]');
-    if (themeMeta) themeMeta.setAttribute('content', mixHex(a.s[0], b.s[0], t));
+    // toolbar follows the scene: store the lerped sky top; updateToolbar() blends it toward
+    // the dark sections by scroll position and writes both the body bg + the theme-color.
+    window.__skyTop = mixHex(a.s[0], b.s[0], t);
+    updateToolbar();
     R.setProperty('--duneA', mixHex(a.d[0], b.d[0], t));
     R.setProperty('--deep',  '#1a0f0a');
     R.setProperty('--deep2', '#241409');
@@ -428,6 +430,23 @@
       duneEls[dn].forEach(function(p){ p.setAttribute('fill', col); });
     }
   }
+  // Safari/iOS tint the top bar from the body background-color + theme-color, and don't
+  // re-sample on scroll. So we drive it ourselves: the sky top through the hero, crossfading
+  // to the dark narrative color as the dark sections fill the viewport, so the bar reads as
+  // part of the scene the whole way down instead of a fixed cap.
+  function updateToolbar(){
+    var skyTop = window.__skyTop || '#2f5a85';
+    var dark = '#1a0f0a';
+    var vh = window.innerHeight || 800;
+    var t = Math.min(1, Math.max(0, (window.scrollY - vh * 0.4) / vh));
+    var col = mixHex(skyTop, dark, t);
+    document.body.style.backgroundColor = col;
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', col);
+  }
+  window.addEventListener('scroll', updateToolbar, { passive: true });
+  window.addEventListener('resize', updateToolbar, { passive: true });
+
   function applySkySafe(){ try { applySky(); } catch(e){} }
   applySkySafe();
   setInterval(applySkySafe, 300000);
